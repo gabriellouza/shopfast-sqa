@@ -1,0 +1,45 @@
+{
+  "env": {
+    "node": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": ["eslint:recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2021
+  },
+  "rules": {
+    "no-unused-vars": "error",
+    "no-console": "warn",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["axios", "axios/*"],
+            "message": "QUALITY GATE VIOLADO: Dependencias HTTP sao proibidas em src/services/. Use injecao de dependencia — IEEE 730, §5.5.2."
+          },
+          {
+            "group": ["pg", "mysql", "mysql2", "mongoose", "sequelize", "typeorm"],
+            "message": "QUALITY GATE VIOLADO: Drivers de banco de dados sao proibidos em src/services/. Use injecao de dependencia — IEEE 730, §5.5.2."
+          },
+          {
+            "group": ["firebase", "firebase/*", "firebase-admin"],
+            "message": "QUALITY GATE VIOLADO: SDKs de cloud sao proibidos em src/services/. Use injecao de dependencia — IEEE 730, §5.5.2."
+          },
+          {
+            "group": ["stripe", "paypal__developer__paypal-js"],
+            "message": "QUALITY GATE VIOLADO: SDKs de pagamento sao proibidos em src/services/. Use injecao de dependencia — IEEE 730, §5.5.2."
+          }
+        ]
+      }
+    ],
+    "no-restricted-globals": [
+      "error",
+      {
+        "name": "fetch",
+        "message": "QUALITY GATE VIOLADO: fetch() global e proibido em funcoes de dominio. Injete o cliente HTTP como parametro — IEEE 730, §5.5.2."
+      }
+    ]
+  }
+}

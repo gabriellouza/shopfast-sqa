@@ -1,0 +1,46 @@
+name: ShopFast — Quality Gate Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-gate:
+    name: Quality Gate (IEEE 730-2014)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ── QUALITY GATE: REGRA 2 — Zero Coupling ──────────────────────────────
+      # Bloqueia imports diretos de infraestrutura em src/services/
+      # Falha = merge recusado automaticamente
+      - name: "[GATE 2] ESLint — Zero Coupling Check"
+        run: npx eslint src/ --max-warnings=0
+
+      # ── QUALITY GATE: REGRA 1 — Cobertura Minima ───────────────────────────
+      # Garante >= 90% de branches em src/services/
+      # Falha = merge recusado automaticamente
+      - name: "[GATE 1] Jest — Coverage Threshold Check"
+        run: npx jest --ci
+
+      # ── RELATORIO DE COBERTURA (informativo) ───────────────────────────────
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
