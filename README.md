@@ -152,5 +152,3 @@ npm run quality-gate
 | Avaliar ambientes                | §5.5.3            | `jest.config.js` (ambiente isolado)      |
 
 ---
-
-*ShopFast SQA | IEEE 730-2014 | Qualidade de Software — Ciclo 02*
